@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 
-const Update = () => {
+const Update = (data, changeData) => {
     const { register } = useForm();
     return (
         <div className="modal-dialog">

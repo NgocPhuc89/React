@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { Modal } from "bootstrap";
-import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from 'uuid';
 
 const Customer = () => {
@@ -12,34 +11,35 @@ const Customer = () => {
             email: "phuc@gmail.com",
             phone: "0123456789",
             gender: "male",
-            city: "hue",
+            city: "Huế",
             address: "phan chu trinh"
         }
     ]);
-    const { register, handleSubmit, reset } = useForm();
-    const [showModal, setShowModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({});
+    const city = [
+        { id: 1, name: "Hà Nội" },
+        { id: 2, name: "TP HCM" },
+        { id: 3, name: "Huế" },
+        { id: 4, name: "Đà Nẵng" }
+    ]
 
     const handleEdit = (id) => {
         console.log(id);
     }
     const handleDelete = (id) => {
-        alert("delete " + id)
+        alert("delete" + id)
         const list = customerList.filter((item) => item.id != id)
         setCustomerList(list)
     }
-    const handleCreate = (data) => {
-        console.log(data);
+    const handleInput = (e) => {
+        console.log(e.target.value);
         const customer = {
-            ...data,
-            id: uuidv4().slice(0, 8)
+            id: uuidv4().slice(0, 8),
+            [e.target.name]: e.target.value
         }
         setCustomerList([
             ...customerList,
             customer
         ])
-        reset();
         document.getElementById('exampleModal').click();
     }
 
@@ -65,7 +65,7 @@ const Customer = () => {
                 </thead>
                 <tbody>
                     {
-                        customerList.map(item => (
+                        customerList.map((item, index) => (
                             <tr key={item.id}>
                                 <td>{item.id}</td>
                                 <td>{item.fullname}</td>
@@ -86,7 +86,7 @@ const Customer = () => {
 
                 </tbody>
             </table>
-            <form onSubmit={handleSubmit(handleCreate)}>
+            <form>
                 <div
                     className="modal fade"
                     id="exampleModal"
@@ -104,25 +104,29 @@ const Customer = () => {
                             <div className="row ms-3 m-2 ">
                                 <div className="col-lg-6">
                                     <label htmlFor="">FullName</label>
-                                    <input type="text" name="" id=""
-                                        {...register('fullname')} />
+                                    <input type="text" name="fullname" id="fullname"
+                                        onChange={handleInput}
+                                    />
                                 </div>
                                 <div className="col-lg-6">
                                     <label htmlFor="">Email</label>
-                                    <input type="email" name="" id=""
-                                        {...register('email')} />
+                                    <input type="email" name="email" id="email"
+                                        onChange={handleInput}
+                                    />
                                 </div>
                             </div>
                             <div className="row ms-3 m-2">
                                 <div className="col-lg-6">
                                     <label htmlFor="">Phone</label>
-                                    <input type="number" name="" id=""
-                                        {...register('phone')} />
+                                    <input type="number" name="phone" id="phone"
+                                        onChange={handleInput}
+                                    />
                                 </div>
                                 <div className="col-lg-6">
                                     <label htmlFor="">Address</label>
-                                    <input type="text" name="" id=""
-                                        {...register('address')} />
+                                    <input type="text" name="address" id="address"
+                                        onChange={handleInput}
+                                    />
                                 </div>
                             </div>
                             <div className="row ms-3 ">
@@ -132,16 +136,19 @@ const Customer = () => {
                                         className="form-select"
                                         multiple=""
                                         aria-label="multiple select example"
-                                        {...register('city')}
+                                        id="city"
+                                        onChange={handleInput}
                                     >
                                         <option defaultValue="">-Vui Lòng Chọn-</option>
-                                        <option value='Hà Nội'>Hà Nội</option>
-                                        <option value='TP HCM'>TP HCM</option>
-                                        <option value='Huế'>Huế</option>
+                                        {
+                                            city.map(item => (
+                                                <option value={item.name} key={item.id}>{item.name}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 <div className="col-lg-6 mb-5">
-                                    <label htmlFor="" className="">Gender
+                                    <label htmlFor="" className="" onChange={handleInput}>Gender
                                         <div className="d-flex">
                                             <div className="form-check me-3">
                                                 <input
@@ -150,7 +157,6 @@ const Customer = () => {
                                                     name="flexRadioDefault"
                                                     id="flexRadioDefault1"
                                                     value="male"
-                                                    {...register('gender')}
                                                 />
                                                 <label className="form-check-label" htmlFor="flexRadioDefault1">Male</label>
                                             </div>
@@ -162,7 +168,6 @@ const Customer = () => {
                                                     id="flexRadioDefault2"
                                                     defaultChecked=""
                                                     value="female"
-                                                    {...register("gender")}
                                                 />
                                                 <label className="form-check-label" htmlFor="flexRadioDefault2"> Female</label>
                                             </div>
