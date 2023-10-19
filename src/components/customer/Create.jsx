@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const Create = (props) => {
-    const { customerList, setCustomerList } = props;
+    const { customerList, setCustomerList, modalType } = props;
     const city = [
         { id: 1, name: "Hà Nội" },
         { id: 2, name: "TP HCM" },
@@ -31,7 +31,7 @@ const Create = (props) => {
             <div className="modal-content">
                 <div className="modal-header">
                     <h5 className="modal-title" id="exampleModalLabel">
-                        Create Customer
+                        {modalType === "create" ? "Create Customer" : "Edit Customer"}
                     </h5>
                 </div>
                 <div className="row ms-3 m-2 ">

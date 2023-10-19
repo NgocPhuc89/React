@@ -17,7 +17,11 @@ const Customer = () => {
         }
     ]);
     const [openModal, setOpenModal] = useState('true');
-    const [modalType, setModalType] = useState('create');
+    const [modalType, setModalType] = useState(null);
+
+    const handleCreate = () => {
+        setModalType('create')
+    }
 
     const handleEdit = (index) => {
 
@@ -33,7 +37,8 @@ const Customer = () => {
             <div >
                 <button className="btn btn-primary"
                     data-bs-toggle="modal"
-                    data-bs-target={openModal ? "#createModal" : "#updateModal"}
+                    data-bs-target="#customerModal"
+                    onClick={handleCreate}
                 >
                     Create
                 </button>
@@ -74,17 +79,25 @@ const Customer = () => {
 
                 </tbody>
             </table>
-            <div
-                className="modal fade"
-                id={openModal ? "createModal" : "updateModal"}
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabIndex={-1}
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-            >
-                <Create customerList={customerList} setCustomerList={setCustomerList} />
-            </div>
+            {
+                modalType && (
+                    <div
+                        className="modal fade"
+                        id="customerModal"
+                        data-bs-backdrop="static"
+                        data-bs-keyboard="false"
+                        tabIndex={-1}
+                        aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true"
+                    >
+                        <Create customerList={customerList}
+                            setCustomerList={setCustomerList}
+                            modalType={modalType}
+                        />
+                    </div>
+                )
+            }
+
         </div>
     )
 }
