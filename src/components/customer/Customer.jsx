@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Modal } from "bootstrap";
 import { v4 as uuidv4 } from 'uuid';
+import Create from "./Create";
 
 const Customer = () => {
     const [customerList, setCustomerList] = useState([
@@ -15,43 +16,27 @@ const Customer = () => {
             address: "phan chu trinh"
         }
     ]);
-    const [customer, setCustomer] = useState({});
-    const city = [
-        { id: 1, name: "Hà Nội" },
-        { id: 2, name: "TP HCM" },
-        { id: 3, name: "Huế" },
-        { id: 4, name: "Đà Nẵng" }
-    ]
+    const [openModal, setOpenModal] = useState('true');
+    const [modalType, setModalType] = useState('create');
 
-    const handleEdit = (id) => {
-        console.log(id);
+    const handleEdit = (index) => {
+
     }
     const handleDelete = (id) => {
         alert("delete" + id)
         const list = customerList.filter((item) => item.id != id)
         setCustomerList(list)
     }
-
-    const handleInput = (e) => {
-        setCustomer(prev => ({
-            ...prev,
-            id: uuidv4().slice(0, 8),
-            [e.target.name]: e.target.value,
-        }))
-    }
-    const handleCreate = () => {
-        setCustomerList([
-            ...customerList,
-            customer
-        ])
-    }
-
     return (
         <div>
             <h1 className="text-center text-danger">Customer List</h1>
-            <div data-bs-toggle="modal"
-                data-bs-target="#createModal">
-                <button className="btn btn-primary">Create</button>
+            <div >
+                <button className="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target={openModal ? "#createModal" : "#updateModal"}
+                >
+                    Create
+                </button>
             </div>
             <table className="table table-striped">
                 <thead>
@@ -77,7 +62,7 @@ const Customer = () => {
                                 <td>{item.gender}</td>
                                 <td>{item.city}</td>
                                 <td>{item.address}</td>
-                                <td onClick={() => handleEdit(item.id)}>
+                                <td onClick={() => handleEdit(index)}>
                                     <i className="fa fa-pen btn btn-primary" />
                                 </td>
                                 <td onClick={() => handleDelete(item.id)}>
@@ -91,108 +76,14 @@ const Customer = () => {
             </table>
             <div
                 className="modal fade"
-                id="createModal"
+                id={openModal ? "createModal" : "updateModal"}
                 data-bs-backdrop="static"
                 data-bs-keyboard="false"
                 tabIndex={-1}
                 aria-labelledby="staticBackdropLabel"
                 aria-hidden="true"
             >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel" >
-                                Create Customer
-                            </h5>
-                        </div>
-                        <div className="row ms-3 m-2 ">
-                            <div className="col-lg-6">
-                                <label htmlFor="">FullName</label>
-                                <input type="text" name="fullname" id="fullname"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                            <div className="col-lg-6">
-                                <label htmlFor="">Email</label>
-                                <input type="email" name="email" id="email"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                        </div>
-                        <div className="row ms-3 m-2">
-                            <div className="col-lg-6">
-                                <label htmlFor="">Phone</label>
-                                <input type="text" name="phone" id="phone"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                            <div className="col-lg-6">
-                                <label htmlFor="">Address</label>
-                                <input type="text" name="address" id="address"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                        </div>
-                        <div className="row ms-3 ">
-                            <div className="col-lg-6">
-                                <label htmlFor="">City</label>
-                                <select
-                                    className="form-select"
-                                    multiple=""
-                                    aria-label="multiple select example"
-                                    id="city"
-                                    name="city"
-                                    onChange={handleInput}
-                                >
-                                    <option defaultValue="">-Vui Lòng Chọn-</option>
-                                    {
-                                        city.map(item => (
-                                            <option value={item.name} key={item.id}>{item.name}</option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                            <div className="col-lg-6 mb-5">
-                                <label htmlFor="" className="" onChange={handleInput}>Gender
-                                    <div className="d-flex">
-                                        <div className="form-check me-3">
-                                            <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                name="gender"
-                                                id="gender"
-                                                value="male"
-                                            />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault1">Male</label>
-                                        </div>
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                name="gender"
-                                                id="gender"
-                                                defaultChecked=""
-                                                value="female"
-                                            />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault2"> Female</label>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                            >
-                                Close
-                            </button>
-                            <button className="btn btn-primary" onClick={handleCreate}>Save changes</button>
-                        </div>
-                    </div>
-                </div>
+                <Create customerList={customerList} setCustomerList={setCustomerList} />
             </div>
         </div>
     )
