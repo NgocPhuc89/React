@@ -16,28 +16,31 @@ const Customer = () => {
             address: "phan chu trinh"
         }
     ]);
-    const [openModal, setOpenModal] = useState('true');
-    const [modalType, setModalType] = useState(null);
+    const [modalType, setModalType] = useState('create');
+    const [editCustomer, setEditCustomer] = useState({});
 
     const handleCreate = () => {
         setModalType('create')
     }
 
     const handleEdit = (index) => {
-
+        setModalType('edit');
+        setEditCustomer(customerList[index]);
     }
     const handleDelete = (id) => {
         alert("delete" + id)
         const list = customerList.filter((item) => item.id != id)
         setCustomerList(list)
     }
+    console.log(editCustomer);
+
     return (
         <div>
             <h1 className="text-center text-danger">Customer List</h1>
             <div >
                 <button className="btn btn-primary"
                     data-bs-toggle="modal"
-                    data-bs-target="#customerModal"
+                    data-bs-target={modalType === "create" ? '#createModal' : '#editModal'}
                     onClick={handleCreate}
                 >
                     Create
@@ -67,7 +70,10 @@ const Customer = () => {
                                 <td>{item.gender}</td>
                                 <td>{item.city}</td>
                                 <td>{item.address}</td>
-                                <td onClick={() => handleEdit(index)}>
+                                <td
+                                    data-bs-toggle="modal"
+                                    data-bs-target={modalType === "create" ? '#createModal' : '#editModal'}
+                                    onClick={() => handleEdit(index)}>
                                     <i className="fa fa-pen btn btn-primary" />
                                 </td>
                                 <td onClick={() => handleDelete(item.id)}>
@@ -79,26 +85,12 @@ const Customer = () => {
 
                 </tbody>
             </table>
-            {
-                modalType && (
-                    <div
-                        className="modal fade"
-                        id="customerModal"
-                        data-bs-backdrop="static"
-                        data-bs-keyboard="false"
-                        tabIndex={-1}
-                        aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true"
-                    >
-                        <Create customerList={customerList}
-                            setCustomerList={setCustomerList}
-                            modalType={modalType}
-                        />
-                    </div>
-                )
-            }
-
-        </div>
+            <Create customerList={customerList}
+                setCustomerList={setCustomerList}
+                modalType={modalType}
+                editCustomer={editCustomer}
+            />
+        </div >
     )
 }
 export default Customer;
